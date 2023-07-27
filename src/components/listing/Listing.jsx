@@ -2,9 +2,9 @@
 import ListingCard from "./ListingCard";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  // addWarehouses,
   setSelectedCities,
   setSelectedClusters,
+  setSelectedSpace,
 } from "../../store/warehouseSlice";
 import { Link } from "react-router-dom";
 
@@ -15,6 +15,31 @@ const Listing = () => {
   const selectedCluster = useSelector(
     (state) => state.warehouse.selectedClusters
   );
+  const selectedSpace = useSelector((state) => state.warehouse.selectedSpace);
+
+  const availableSpace = ["Less than 100", "100-499", "500-1000", "1000+"];
+
+  // const filteredSpace = selectedSpace.map((space) => {
+  //   if (space === "Less than 100") {
+  //     return warehouses.filter((warehouse) => warehouse.space_available < 100);
+  //   } else if (space === "100-499") {
+  //     return warehouses.filter(
+  //       (warehouse) =>
+  //         warehouse.space_available >= 100 && warehouse.space_available <= 499
+  //     );
+  //   } else if (space === "500-1000") {
+  //     return warehouses.filter(
+  //       (warehouse) =>
+  //         warehouse.space_available >= 500 && warehouse.space_available <= 1000
+  //     );
+  //   } else if (space === "1000+") {
+  //     return warehouses.filter(
+  //       (warehouse) => warehouse.space_available >= 1000
+  //     );
+  //   } else {
+  //     return warehouses;
+  //   }
+  // });
 
   const handleCityChange = (e) => {
     const city = e.target.value;
@@ -36,6 +61,19 @@ const Listing = () => {
     } else {
       dispatch(
         setSelectedClusters(selectedCluster.filter((item) => item !== cluster))
+      );
+    }
+  };
+
+  const handleSpaceChange = (e) => {
+    const space = e.target.value;
+    const isChecked = e.target.checked;
+
+    if (isChecked) {
+      dispatch(setSelectedSpace([...selectedSpace, space]));
+    } else {
+      dispatch(
+        setSelectedSpace(selectedSpace.filter((item) => item !== space))
       );
     }
   };
@@ -73,7 +111,27 @@ const Listing = () => {
       selectedCluster.length === 0 ||
       selectedCluster.includes(warehouse.cluster);
 
-    return cityMatch && clusterMatch;
+    const spaceMatch =
+      selectedSpace.length === 0 ||
+      selectedSpace.some((space) => {
+        if (space === "Less than 100") {
+          return warehouse.space_available < 100;
+        } else if (space === "100-499") {
+          return (
+            warehouse.space_available >= 100 && warehouse.space_available <= 499
+          );
+        } else if (space === "500-1000") {
+          return (
+            warehouse.space_available >= 500 &&
+            warehouse.space_available <= 1000
+          );
+        } else if (space === "1000+") {
+          return warehouse.space_available >= 1000;
+        }
+        return warehouse;
+      });
+
+    return cityMatch && clusterMatch && spaceMatch;
   });
 
   return (
@@ -106,6 +164,21 @@ const Listing = () => {
                 onChange={handleClusterChange}
               />
               {cluster}
+            </label>
+          ))}
+        </div>
+        <div>
+          <label>Filter by Space Available:</label>
+          {availableSpace.map((space, index) => (
+            <label key={index}>
+              <input
+                type="checkbox"
+                label={space}
+                value={space}
+                checked={selectedSpace.includes(space)}
+                onChange={handleSpaceChange}
+              />
+              {`${space} sqft`}`
             </label>
           ))}
         </div>
