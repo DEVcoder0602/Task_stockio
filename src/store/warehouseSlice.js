@@ -6,6 +6,7 @@ const warehouseSlice = createSlice({
     warehouses: [],
     selectedCities: [],
     selectedClusters: [],
+    selectedSpace: [],
   },
   reducers: {
     addWarehouses(state, action) {
@@ -17,6 +18,9 @@ const warehouseSlice = createSlice({
     setSelectedClusters(state, action) {
       state.selectedClusters = action.payload;
     },
+    setSelectedSpace(state, action) {
+      state.selectedSpace = action.payload;
+    },
     updateWarehouse(state, action) {
       const updatedWarehouse = action.payload;
       // console.log(updatedWarehouse);
@@ -24,7 +28,7 @@ const warehouseSlice = createSlice({
         (warehouse) => warehouse.id === updatedWarehouse.id
       );
       state.warehouses[warehouseIndex] = updatedWarehouse;
-      console.log(state.warehouses);
+      // console.log(state.warehouses);
     },
   },
 });
@@ -33,6 +37,7 @@ export const {
   addWarehouses,
   setSelectedCities,
   setSelectedClusters,
+  setSelectedSpace,
   updateWarehouse,
 } = warehouseSlice.actions;
 export default warehouseSlice.reducer;
