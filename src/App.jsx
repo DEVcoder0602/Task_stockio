@@ -1,9 +1,9 @@
 import "./App.css";
 import Listing from "./components/listing/Listing";
-import { OriginalData } from "./components/listing/originalData";
+import { OriginalData } from "./components/listing/OriginalData";
 import WarehouseDetail from "./components/warehouse/WarehouseDetail";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
-// import Login from "./components/login/Login";
+
 
 function App() {
   const Layout = () => {
